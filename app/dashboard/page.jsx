@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Dashboard({children}) {
+function Dashboard() {
   return (
       <div>
-        {children}  
+        Dashboard  
     </div>
   )
 }
