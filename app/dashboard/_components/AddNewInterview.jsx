@@ -11,21 +11,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { text } from "drizzle-orm/pg-core";
+import { chatSession } from "@/utils/GeminiAiModal";
+import { LoaderCircle } from "lucide-react";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
   const [jobPosition, setJobPosition] = useState();
   const [jobDes, setJobDes] = useState();
-  const [jobExp, setJobExp] = useState();
+  const [jobExp, setJobExp] = useState(); 
+  const [loading, setLoading] = useState(false);
+  
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    const data = {
-      jobPosition: jobPosition,
-      jobDes: jobDes,
-      jobExp: jobExp,
-    };
-    console.log(data);
+
+    console.log(jobPosition, jobDes, jobExp);
+
+    const InputPrompt = "job Position: "+jobPosition+", job Description:"+jobDes+" , Years of Experience: "+jobExp+", Depends on this information please give me "+process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT+" interview question with Answered in Json Format, Give Question and Answered as field in JSON"
+    const result = await chatSession.sendMessage(InputPrompt);
+
+    const MockJsonResp = (result.response.text()).replace('```json','').replace('```','');
+
+    console.log(JSON.parse(MockJsonResp));
+    setLoading(false);
+
   }
 
   return (
@@ -80,7 +90,15 @@ function AddNewInterview() {
                   <Button type="button" variant="ghost" onClick={() => setOpenDialog(false)}>
                     Cancel
                   </Button>
-                  <Button type="submit">Start Interview</Button>
+                  <Button type="submit" disabled={loading}>
+                    
+                    {
+                      loading ?
+                        <>
+                          <LoaderCircle className="animate-spin"/>'Generating from AI'
+                        </> : 'Start Interview'
+                    }
+                    Start Interview</Button>
                 </div>
               </form>
             </DialogDescription>
