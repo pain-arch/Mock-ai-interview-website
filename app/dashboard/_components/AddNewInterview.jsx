@@ -54,6 +54,9 @@ function AddNewInterview() {
         }).returning({ mockId: MockInterview.mockId });
     
       console.log("Inserted ID:", resp);
+      if (resp) {
+        setOpenDialog(false);
+      }
     }
     else {
       console.log("Error in AI response");
