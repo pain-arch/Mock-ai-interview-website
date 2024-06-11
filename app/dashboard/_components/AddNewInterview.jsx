@@ -13,6 +13,11 @@ import { Input } from "@/components/ui/input";
 import { text } from "drizzle-orm/pg-core";
 import { chatSession } from "@/utils/GeminiAiModal";
 import { LoaderCircle } from "lucide-react";
+import { db } from "@/utils/db";
+import { MockInterview } from "@/utils/schema";
+import { v4 as uuidv4 } from 'uuid';
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -20,7 +25,8 @@ function AddNewInterview() {
   const [jobDes, setJobDes] = useState();
   const [jobExp, setJobExp] = useState(); 
   const [loading, setLoading] = useState(false);
-  
+  const [jsonResponse, setJsonResponse] = useState([]);
+  const { user } = useUser();
 
   const onSubmit = async (e) => {
     setLoading(true);
@@ -33,7 +39,25 @@ function AddNewInterview() {
 
     const MockJsonResp = (result.response.text()).replace('```json','').replace('```','');
 
-    console.log(JSON.parse(MockJsonResp));
+    setJsonResponse(MockJsonResp)
+
+    if (MockJsonResp) {
+      const resp = await db.insert(MockInterview)
+        .values({
+          mockId: uuidv4(),
+          jsonMockResp: MockJsonResp,
+          jobPositiopn: jobPosition,
+          jobDesc: jobDes,
+          jobExperience: jobExp,
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+          createdAt: moment().format('DD-MM-YYYY')
+        }).returning({ mockId: MockInterview.mockId });
+    
+      console.log("Inserted ID:", resp);
+    }
+    else {
+      console.log("Error in AI response");
+    }
     setLoading(false);
 
   }
@@ -98,7 +122,7 @@ function AddNewInterview() {
                           <LoaderCircle className="animate-spin"/>'Generating from AI'
                         </> : 'Start Interview'
                     }
-                    Start Interview</Button>
+                    </Button>
                 </div>
               </form>
             </DialogDescription>
