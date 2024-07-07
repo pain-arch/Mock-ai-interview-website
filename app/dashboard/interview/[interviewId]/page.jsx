@@ -88,7 +88,6 @@ function Interview({ params }) {
         <Link href={params.interviewId+"/start"}>
           <Button>Start Interview</Button>
         </Link>
-        <h1>{params.interviewId}</h1>
       </div>
     </div>
   );
