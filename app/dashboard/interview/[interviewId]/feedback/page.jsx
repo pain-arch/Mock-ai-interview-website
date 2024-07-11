@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 
 function Feedback({ params }) {
@@ -28,7 +29,7 @@ function Feedback({ params }) {
       .orderBy(UserAnswer.id);
 
     setFeedbackList(result);
-    console.log(result);
+    
   };
 
   return (
