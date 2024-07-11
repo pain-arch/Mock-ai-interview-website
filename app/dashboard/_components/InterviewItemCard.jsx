@@ -3,14 +3,14 @@ import { useRouter } from 'next/navigation';
 import React from 'react'
 
 function InterviewItemCard({ interview }) {
-    
+
     const router = useRouter();
     const onStart = () => {
-        router.push(`/dashboard/interview/${interview.id}`);
+        router.push(`/dashboard/interview/${interview.mockId}`);
     }
 
     const onFeedbackPress = () => {
-        router.push(`/dashboard/interview/${interview.id}/feedback`);
+        router.push(`/dashboard/interview/${interview.mockId}/feedback`);
     }
 
   return (
