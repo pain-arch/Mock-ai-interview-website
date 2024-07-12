@@ -18,7 +18,7 @@ function RecordAnsSection({ activeQuestionIndex, interviewData, mockInterviewQue
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
 
-  
+  console.log(mockInterviewQuestion)
 
   const {
     error,
@@ -79,8 +79,8 @@ function RecordAnsSection({ activeQuestionIndex, interviewData, mockInterviewQue
 
     const resp = await db.insert(UserAnswer).values({
       mockIdRef: interviewData?.mockId,
-      question: mockInterviewQuestion[activeQuestionIndex]?.question,
-      correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
+      question: mockInterviewQuestion[activeQuestionIndex]?.Question,
+      correctAns: mockInterviewQuestion[activeQuestionIndex]?.Answer,
       userAns: userAnswer,
       feedback: JsonFeedbackResp?.feedback,
       rating: JsonFeedbackResp?.rating,
